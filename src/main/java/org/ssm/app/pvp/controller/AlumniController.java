@@ -1,7 +1,5 @@
 package org.ssm.app.pvp.controller;
 
-import java.util.stream.Stream;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,11 +31,7 @@ public class AlumniController {
 	public ResponseEntity<AlumniMetadata> get(@PathVariable("includeStudents") boolean includeStudents, 
 												@PathVariable("includeTeachers") boolean includeTeachers, 
 												@PathVariable("regions") String[] regions) {
-		System.out.println("Selected Options:");
-		System.out.println("Include Students: " + includeStudents);
-		System.out.println("Include Teachers: " + includeTeachers);
-		Stream.of(regions).forEach(r-> {System.out.println("Region: " +r.toString());});
-		
+				
 		AlumniMetadata alumniMetadata = processAlumniData(includeStudents, includeTeachers, regions);
 		alumniMetadata.setGroupChoiceData(alumniService.alumniMetadataByGroupType());
 		return new ResponseEntity<>(alumniMetadata, HttpStatus.OK);
