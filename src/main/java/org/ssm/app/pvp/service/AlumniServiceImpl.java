@@ -143,15 +143,15 @@ public class AlumniServiceImpl implements AlumniService {
 	}
 	
 	private void buildBars(final AlumniMultiDateData[] multiDateData, final BarChartData.Data processedData, String region) {		
-		List<Float> datas = new ArrayList<>();
+		List<Integer> datas = new ArrayList<>();
 		Stream.of(multiDateData).forEach(alumniData ->{
 			AlumniData[] allSchools = alumniData.getAlumniData();
 			Integer totalRegisteredStudents = Stream.of(allSchools)
 					.filter(f->(region == null || f.getDistrict().equals(region)))
 					.mapToInt(d->d.getTotal()).sum();
-			datas.add(Float.parseFloat(totalRegisteredStudents.toString()));
+			datas.add(totalRegisteredStudents);
 		});		
-		processedData.setData(datas.toArray(new Float[datas.size()]));
+		processedData.setData(datas);
 	}
 
 	private AlumniMultiDateData getMaxDateData() {

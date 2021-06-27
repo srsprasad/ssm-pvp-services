@@ -1,5 +1,7 @@
 package org.ssm.app.pvp.data;
 
+import java.util.List;
+
 public class BarChartData {
 
 	private String[] categories;
@@ -27,17 +29,17 @@ public class BarChartData {
 	
 	public class Data {
 		private String name;
-		private Float[] data;
+		private List<Integer> data;
 		public String getName() {
 			return name;
 		}
 		public void setName(String name) {
 			this.name = name;
 		}
-		public Float[] getData() {
+		public List<Integer> getData() {
 			return data;
 		}
-		public void setData(Float[] data) {
+		public void setData(List<Integer> data) {
 			this.data = data;
 		}
 		
