@@ -13,8 +13,8 @@ import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
+import org.apache.commons.io.IOUtils;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.ssm.app.pvp.data.AlumniData;
 import org.ssm.app.pvp.data.AlumniMultiDateData;
@@ -25,12 +25,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class AlumniServiceImpl implements AlumniService {
-
-	@Value("classpath:data/ssm-alumni-students-data.json")
-	Resource alumniStudentsResourceFile;
-	
-	@Value("classpath:data/ssm-alumni-teachers-data.json")
-	Resource alumniTeachersResourceFile;
 	
 	private AlumniMultiDateData[] alumniStudentsMultiDateData;
 	
@@ -40,15 +34,29 @@ public class AlumniServiceImpl implements AlumniService {
 	public void init() {
 		ObjectMapper mapper = new ObjectMapper();
 		try {
-			alumniStudentsMultiDateData = mapper.readValue(alumniStudentsResourceFile.getFile(), AlumniMultiDateData[].class);
+			ClassPathResource studentResource = new ClassPathResource("data/ssm-alumni-students-data.json");
+			String studentsData;
+			if (studentResource.exists()) {
+				studentsData = IOUtils.toString(studentResource.getInputStream(), "utf-8");
+			}else {
+				throw new IllegalArgumentException("Students data not found");
+			}
+			
+			alumniStudentsMultiDateData = mapper.readValue(studentsData, AlumniMultiDateData[].class);
 			Stream.of(alumniStudentsMultiDateData).parallel()
 				.forEach(alumniDateData -> {
 					Stream.of(alumniDateData.getAlumniData())
 					.forEach(data-> {if (data.getDistrict() == null) {data.setDistrict("UNKNOWN");}});
 				});
 			System.out.println("Number of DataSets found: "+ alumniStudentsMultiDateData.length);
-			
-			alumniTeachersMultiDateData = mapper.readValue(alumniTeachersResourceFile.getFile(), AlumniMultiDateData[].class);
+			ClassPathResource teachersResource = new ClassPathResource("data/ssm-alumni-students-data.json");
+			String teachersData;
+			if (teachersResource.exists()) {
+				teachersData = IOUtils.toString(teachersResource.getInputStream(), "utf-8");
+			}else {
+				throw new IllegalArgumentException("Students data not found");
+			}
+			alumniTeachersMultiDateData = mapper.readValue(teachersData, AlumniMultiDateData[].class);
 			Stream.of(alumniTeachersMultiDateData).parallel()
 				.forEach(alumniDateData -> {
 					Stream.of(alumniDateData.getAlumniData())
@@ -113,11 +121,6 @@ public class AlumniServiceImpl implements AlumniService {
 					buildBars(studentsMultiDateData, studentsData, region);
 					alumniData.add(studentsData);
 				}
-				/*
-				 * final BarChartData.Data studentsData = barChartData.newData();
-				 * studentsData.setName("Students"); buildBars(studentsMultiDateData,
-				 * studentsData); alumniData.add(studentsData);
-				 */
 			}
 		}else {
 			if (includeStudents) {
