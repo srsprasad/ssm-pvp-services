@@ -2,7 +2,7 @@ package org.ssm.app.pvp.data;
 
 import java.util.List;
 
-public class AlumniMetadata {
+public class SchoolMetadata {
 
 	private boolean teachersSelected;
 	

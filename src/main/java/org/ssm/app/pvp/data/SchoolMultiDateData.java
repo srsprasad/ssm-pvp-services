@@ -5,13 +5,13 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class AlumniMultiDateData {
+public class SchoolMultiDateData {
 	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
 	private Date date;
 	
 	@JsonProperty("alumniData")
-	private AlumniData[] alumniData;
+	private SchoolData[] alumniData;
 
 	public Date getDate() {
 		return date;
@@ -21,12 +21,12 @@ public class AlumniMultiDateData {
 		this.date = date;
 	}
 
-	public AlumniData[] getAlumniData() {
+	public SchoolData[] getSchoolData() {
 		return alumniData;
 	}
 
-	public void setAlumniData(AlumniData[] alumniData) {
-		this.alumniData = alumniData;
+	public void setSchoolData(SchoolData[] schoolData) {
+		this.alumniData = schoolData;
 	}
 	
 	

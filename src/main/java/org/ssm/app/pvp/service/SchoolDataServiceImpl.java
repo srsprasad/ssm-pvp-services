@@ -16,19 +16,19 @@ import javax.annotation.PostConstruct;
 import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
-import org.ssm.app.pvp.data.AlumniData;
-import org.ssm.app.pvp.data.AlumniMultiDateData;
+import org.ssm.app.pvp.data.SchoolData;
+import org.ssm.app.pvp.data.SchoolMultiDateData;
 import org.ssm.app.pvp.data.BarChartData;
 import org.ssm.app.pvp.data.GroupChoiceData;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
-public class AlumniServiceImpl implements AlumniService {
+public class SchoolDataServiceImpl implements SchoolDataService {
 	
-	private AlumniMultiDateData[] alumniStudentsMultiDateData;
+	private SchoolMultiDateData[] schoolStudentsMultiDateData;
 	
-	private AlumniMultiDateData[] alumniTeachersMultiDateData;
+	private SchoolMultiDateData[] schoolTeachersMultiDateData;
 	
 	@PostConstruct
 	public void init() {
@@ -42,13 +42,13 @@ public class AlumniServiceImpl implements AlumniService {
 				throw new IllegalArgumentException("Students data not found");
 			}
 			
-			alumniStudentsMultiDateData = mapper.readValue(studentsData, AlumniMultiDateData[].class);
-			Stream.of(alumniStudentsMultiDateData).parallel()
+			schoolStudentsMultiDateData = mapper.readValue(studentsData, SchoolMultiDateData[].class);
+			Stream.of(schoolStudentsMultiDateData).parallel()
 				.forEach(alumniDateData -> {
-					Stream.of(alumniDateData.getAlumniData())
+					Stream.of(alumniDateData.getSchoolData())
 					.forEach(data-> {if (data.getDistrict() == null) {data.setDistrict("UNKNOWN");}});
 				});
-			System.out.println("Number of DataSets found: "+ alumniStudentsMultiDateData.length);
+			System.out.println("Number of DataSets found: "+ schoolStudentsMultiDateData.length);
 			ClassPathResource teachersResource = new ClassPathResource("data/ssm-alumni-students-data.json");
 			String teachersData;
 			if (teachersResource.exists()) {
@@ -56,13 +56,13 @@ public class AlumniServiceImpl implements AlumniService {
 			}else {
 				throw new IllegalArgumentException("Students data not found");
 			}
-			alumniTeachersMultiDateData = mapper.readValue(teachersData, AlumniMultiDateData[].class);
-			Stream.of(alumniTeachersMultiDateData).parallel()
+			schoolTeachersMultiDateData = mapper.readValue(teachersData, SchoolMultiDateData[].class);
+			Stream.of(schoolTeachersMultiDateData).parallel()
 				.forEach(alumniDateData -> {
-					Stream.of(alumniDateData.getAlumniData())
+					Stream.of(alumniDateData.getSchoolData())
 					.forEach(data-> {if (data.getDistrict() == null) {data.setDistrict("UNKNOWN");}});
 				});
-			System.out.println("Number of DataSets found: "+ alumniTeachersMultiDateData.length);
+			System.out.println("Number of DataSets found: "+ schoolTeachersMultiDateData.length);
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -70,15 +70,15 @@ public class AlumniServiceImpl implements AlumniService {
 	}
 	
 	@Override
-	public List<GroupChoiceData> alumniMetadataByGroupType() {
+	public List<GroupChoiceData> schoolMetadataByGroupType() {
 		List<GroupChoiceData> groupChoiceDataList = new ArrayList<>();
 		// Get latest dated dataset records.
-		AlumniData[] alumniData = getMaxDateData().getAlumniData();
-		Map<String, Set<AlumniData>> groupedData = Stream.of(alumniData).filter(d -> d.getDistrict() != null)
-				.collect(Collectors.groupingBy(AlumniData::getDistrict, Collectors.toSet()));
+		SchoolData[] schoolData = getMaxDateData().getSchoolData();
+		Map<String, Set<SchoolData>> groupedData = Stream.of(schoolData).filter(d -> d.getDistrict() != null)
+				.collect(Collectors.groupingBy(SchoolData::getDistrict, Collectors.toSet()));
 		System.out.println("Total Datistricts count: " + groupedData.size());
 		Integer total = 0;
-		for (Map.Entry<String, Set<AlumniData>> entry : groupedData.entrySet()) {
+		for (Map.Entry<String, Set<SchoolData>> entry : groupedData.entrySet()) {
 			Integer totalGroupStudents = entry.getValue().stream().mapToInt(p -> p.getTotal()).sum();
 			total += totalGroupStudents;
 			GroupChoiceData choiceData = new GroupChoiceData();
@@ -94,26 +94,26 @@ public class AlumniServiceImpl implements AlumniService {
 	public BarChartData processBarChartData(boolean includeStudents, boolean includeTeachers, String[] regions) {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 		BarChartData barChartData = new BarChartData();
-		List<String> dates = Stream.of(alumniStudentsMultiDateData).map(amd -> sdf.format(amd.getDate()))
+		List<String> dates = Stream.of(schoolStudentsMultiDateData).map(amd -> sdf.format(amd.getDate()))
 				.collect(Collectors.toList());
 		barChartData.setCategories(dates.toArray(new String[dates.size()]));		
 		//For students
 		List<String> regionsList = Arrays.asList(regions);
 		List<BarChartData.Data> alumniData = new ArrayList<>();
-		AlumniMultiDateData[] studentsMultiDateData;
-		AlumniMultiDateData[] techerssMultiDateData;
-		List<AlumniMultiDateData> filtered = new ArrayList<>();
+		SchoolMultiDateData[] studentsMultiDateData;
+		SchoolMultiDateData[] techerssMultiDateData;
+		List<SchoolMultiDateData> filtered = new ArrayList<>();
 		if (regions != null) {
-			Stream.of(alumniStudentsMultiDateData).forEach(schoolData -> {
-				List<AlumniData> schoolsData = Stream.of(schoolData.getAlumniData())
+			Stream.of(schoolStudentsMultiDateData).forEach(schoolData -> {
+				List<SchoolData> schoolsData = Stream.of(schoolData.getSchoolData())
 						.filter(d -> regionsList.contains(d.getDistrict())).collect(Collectors.toList());
-				AlumniMultiDateData multiDateData = new AlumniMultiDateData();
+				SchoolMultiDateData multiDateData = new SchoolMultiDateData();
 				multiDateData.setDate(schoolData.getDate());
-				multiDateData.setAlumniData(schoolsData.toArray(new AlumniData[schoolsData.size()]));
+				multiDateData.setSchoolData(schoolsData.toArray(new SchoolData[schoolsData.size()]));
 				filtered.add(multiDateData);
 			});
 
-			studentsMultiDateData = filtered.toArray(new AlumniMultiDateData[filtered.size()]);
+			studentsMultiDateData = filtered.toArray(new SchoolMultiDateData[filtered.size()]);
 			if (includeStudents) {
 				for (String region : regionsList) {
 					final BarChartData.Data studentsData = barChartData.newData();
@@ -126,14 +126,14 @@ public class AlumniServiceImpl implements AlumniService {
 			if (includeStudents) {
 				final BarChartData.Data studentsData = barChartData.newData();
 				studentsData.setName("Students");
-				buildBars(alumniStudentsMultiDateData, studentsData, null);
+				buildBars(schoolStudentsMultiDateData, studentsData, null);
 				alumniData.add(studentsData);
 			}
 			if (includeTeachers) {
 				//for Teachers
 				final BarChartData.Data teachersData = barChartData.newData();
 				teachersData.setName("Teachers");
-				buildBars(alumniTeachersMultiDateData, teachersData, null);
+				buildBars(schoolTeachersMultiDateData, teachersData, null);
 				alumniData.add(teachersData);
 			}
 		}
@@ -142,10 +142,10 @@ public class AlumniServiceImpl implements AlumniService {
 		return barChartData;
 	}
 	
-	private void buildBars(final AlumniMultiDateData[] multiDateData, final BarChartData.Data processedData, String region) {		
+	private void buildBars(final SchoolMultiDateData[] multiDateData, final BarChartData.Data processedData, String region) {		
 		List<Integer> datas = new ArrayList<>();
-		Stream.of(multiDateData).forEach(alumniData ->{
-			AlumniData[] allSchools = alumniData.getAlumniData();
+		Stream.of(multiDateData).forEach(dataRecord ->{
+			SchoolData[] allSchools = dataRecord.getSchoolData();
 			Integer totalRegisteredStudents = Stream.of(allSchools)
 					.filter(f->(region == null || f.getDistrict().equals(region)))
 					.mapToInt(d->d.getTotal()).sum();
@@ -154,8 +154,8 @@ public class AlumniServiceImpl implements AlumniService {
 		processedData.setData(datas);
 	}
 
-	private AlumniMultiDateData getMaxDateData() {
-		Optional<AlumniMultiDateData> alumniMaxDateData = Stream.of(alumniStudentsMultiDateData)
+	private SchoolMultiDateData getMaxDateData() {
+		Optional<SchoolMultiDateData> alumniMaxDateData = Stream.of(schoolStudentsMultiDateData)
 				.max((left, right) -> left.getDate().compareTo(right.getDate()));
 		return alumniMaxDateData.get();
 	}

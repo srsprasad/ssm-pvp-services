@@ -2,7 +2,7 @@ package org.ssm.app.pvp.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class AlumniData {
+public class SchoolData {
 
 	@JsonProperty("SCHOOL_ID")
 	private Integer schoolId;
