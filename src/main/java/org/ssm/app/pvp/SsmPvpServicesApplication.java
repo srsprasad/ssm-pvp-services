@@ -9,5 +9,4 @@ public class SsmPvpServicesApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SsmPvpServicesApplication.class, args);
 	}
-
 }
