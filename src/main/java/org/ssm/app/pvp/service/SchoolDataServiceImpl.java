@@ -193,8 +193,7 @@ public class SchoolDataServiceImpl implements SchoolDataService {
 		for (Map.Entry<String, List<SchoolData>> entry: schoolDataMap.entrySet()) {
 			String zillaName =entry.getKey();
 			String zillaKey = zillaName.replaceAll("\\s", "");
-			List<Integer> schoolIdList = entry.getValue().stream().map(e->e.getSchoolId()).toList();
-			
+			List<Integer> schoolIdList = entry.getValue().stream().map(e->e.getSchoolId()).collect(Collectors.toList());			
 			FilterData filterData = new FilterData();
 			filterData.setKey(zillaKey.toLowerCase());
 			filterData.setName(zillaName);
