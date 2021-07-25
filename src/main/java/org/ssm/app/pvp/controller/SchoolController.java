@@ -16,7 +16,7 @@ public class SchoolController {
 	@Autowired
 	private SchoolDataService alumniService;
 	
-	@CrossOrigin(origins = {"http://srsprasad.github.io", "https://srsprasad.github.io"})
+	@CrossOrigin(origins = {"http://srsprasad.github.io", "http://localhost:4200", "https://localhost:4200"})
 	@GetMapping(path="/school/{includeStudents}/{includeTeachers}", produces = "application/json")
 	public ResponseEntity<SchoolMetadata> get(@PathVariable("includeStudents") boolean includeStudents, 
 												@PathVariable("includeTeachers") boolean includeTeachers) {
@@ -29,7 +29,7 @@ public class SchoolController {
 		return new ResponseEntity<>(schoolMetadata, HttpStatus.OK);
 	}
 	
-	@CrossOrigin(origins = {"http://srsprasad.github.io", "https://srsprasad.github.io"})
+	@CrossOrigin(origins = {"http://srsprasad.github.io", "http://localhost:4200", "https://localhost:4200"})
 	@GetMapping(path="/school/{includeStudents}/{includeTeachers}/{regions}", produces = "application/json")
 	public ResponseEntity<SchoolMetadata> get(@PathVariable("includeStudents") boolean includeStudents, 
 												@PathVariable("includeTeachers") boolean includeTeachers, 

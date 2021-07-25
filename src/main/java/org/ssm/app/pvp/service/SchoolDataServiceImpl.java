@@ -48,7 +48,6 @@ public class SchoolDataServiceImpl implements SchoolDataService {
 					Stream.of(alumniDateData.getSchoolData())
 					.forEach(data-> {if (data.getDistrict() == null) {data.setDistrict("UNKNOWN");}});
 				});
-			System.out.println("Number of DataSets found: "+ schoolStudentsMultiDateData.length);
 			ClassPathResource teachersResource = new ClassPathResource("data/ssm-alumni-students-data.json");
 			String teachersData;
 			if (teachersResource.exists()) {
@@ -62,7 +61,6 @@ public class SchoolDataServiceImpl implements SchoolDataService {
 					Stream.of(alumniDateData.getSchoolData())
 					.forEach(data-> {if (data.getDistrict() == null) {data.setDistrict("UNKNOWN");}});
 				});
-			System.out.println("Number of DataSets found: "+ schoolTeachersMultiDateData.length);
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -76,7 +74,6 @@ public class SchoolDataServiceImpl implements SchoolDataService {
 		SchoolData[] schoolData = getMaxDateData().getSchoolData();
 		Map<String, Set<SchoolData>> groupedData = Stream.of(schoolData).filter(d -> d.getDistrict() != null)
 				.collect(Collectors.groupingBy(SchoolData::getDistrict, Collectors.toSet()));
-		System.out.println("Total Datistricts count: " + groupedData.size());
 		Integer total = 0;
 		for (Map.Entry<String, Set<SchoolData>> entry : groupedData.entrySet()) {
 			Integer totalGroupStudents = entry.getValue().stream().mapToInt(p -> p.getTotal()).sum();
