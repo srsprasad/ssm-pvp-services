@@ -1,7 +1,9 @@
 package org.ssm.app.pvp.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SchoolData {
 
 	@JsonProperty("SCHOOL_ID")
@@ -33,6 +35,15 @@ public class SchoolData {
 	
     @JsonProperty(value="DISTRICT", defaultValue = "UNKNOWN")
 	private String district;
+    
+    @JsonProperty("ZILLA_NAME")
+    private String zillaName;
+    
+    @JsonProperty("VIBHAG_NAME")
+    private String vibhagName;
+    
+    @JsonProperty("VIBHAG_SHORT_NAME")
+    private String vibhagShortName;
 
 	public Integer getSchoolId() {
 		return schoolId;
@@ -113,5 +124,28 @@ public class SchoolData {
 	public void setDistrict(String district) {
 		this.district = district;
 	}
-	
+
+	public String getZillaName() {
+		return zillaName;
+	}
+
+	public void setZillaName(String zillaName) {
+		this.zillaName = zillaName;
+	}
+
+	public String getVibhagName() {
+		return vibhagName;
+	}
+
+	public void setVibhagName(String vibhagName) {
+		this.vibhagName = vibhagName;
+	}
+
+	public String getVibhagShortName() {
+		return vibhagShortName;
+	}
+
+	public void setVibhagShortName(String vibhagShortName) {
+		this.vibhagShortName = vibhagShortName;
+	}
 }

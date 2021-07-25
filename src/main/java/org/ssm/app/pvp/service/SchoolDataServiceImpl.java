@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -16,28 +17,48 @@ import javax.annotation.PostConstruct;
 import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
+import org.ssm.app.pvp.data.BarChartData;
+import org.ssm.app.pvp.data.FilterData;
+import org.ssm.app.pvp.data.GroupChoiceData;
 import org.ssm.app.pvp.data.SchoolData;
 import org.ssm.app.pvp.data.SchoolMultiDateData;
-import org.ssm.app.pvp.data.BarChartData;
-import org.ssm.app.pvp.data.GroupChoiceData;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class SchoolDataServiceImpl implements SchoolDataService {
 	
+	private final String SCHOOL_VIBHAG_LIST_URL = "data/telangana_ssm_vibhag_list.json";
+	
 	private SchoolMultiDateData[] schoolStudentsMultiDateData;
 	
 	private SchoolMultiDateData[] schoolTeachersMultiDateData;
 	
+	private List<FilterData> districtList = new ArrayList<>();
+	
+	private List<FilterData> vibhagList = new ArrayList<>();
+	
 	@PostConstruct
 	public void init() {
+		ClassPathResource resource;
 		ObjectMapper mapper = new ObjectMapper();
+		TreeMap<String, List<SchoolData>> sortedMap;
 		try {
-			ClassPathResource studentResource = new ClassPathResource("data/ssm-alumni-students-data.json");
+			resource = new ClassPathResource(SCHOOL_VIBHAG_LIST_URL);
+			SchoolData[] vibhagSourceData = mapper.readValue(resource.getInputStream(), SchoolData[].class);
+			
+			Map<String, List<SchoolData>> zillaGroup = Stream.of(vibhagSourceData).collect(Collectors.groupingBy(SchoolData::getZillaName));
+			sortedMap = new TreeMap<>(zillaGroup);			
+			buildFilterData(sortedMap, districtList);
+			
+			Map<String, List<SchoolData>> vibhagGroup = Stream.of(vibhagSourceData).collect(Collectors.groupingBy(SchoolData::getVibhagName));
+			sortedMap = new TreeMap<>(vibhagGroup);
+			buildFilterData(sortedMap, vibhagList);
+			
+			resource = new ClassPathResource("data/ssm-alumni-students-data.json");
 			String studentsData;
-			if (studentResource.exists()) {
-				studentsData = IOUtils.toString(studentResource.getInputStream(), "utf-8");
+			if (resource.exists()) {
+				studentsData = IOUtils.toString(resource.getInputStream(), "utf-8");
 			}else {
 				throw new IllegalArgumentException("Students data not found");
 			}
@@ -157,4 +178,28 @@ public class SchoolDataServiceImpl implements SchoolDataService {
 		return alumniMaxDateData.get();
 	}
 
+	@Override
+	public List<FilterData> getVibhagList() {
+		return vibhagList;
+	}
+	
+	@Override
+	public List<FilterData> getDistrictList() {
+		return districtList;
+	}
+	
+	private void buildFilterData(Map<String, List<SchoolData>> schoolDataMap, List<FilterData> filterDataList) {
+		 
+		for (Map.Entry<String, List<SchoolData>> entry: schoolDataMap.entrySet()) {
+			String zillaName =entry.getKey();
+			String zillaKey = zillaName.replaceAll("\\s", "");
+			List<Integer> schoolIdList = entry.getValue().stream().map(e->e.getSchoolId()).toList();
+			
+			FilterData filterData = new FilterData();
+			filterData.setKey(zillaKey.toLowerCase());
+			filterData.setName(zillaName);
+			filterData.setSchoolIdList(schoolIdList);
+			filterDataList.add(filterData);
+		}
+	}
 }
