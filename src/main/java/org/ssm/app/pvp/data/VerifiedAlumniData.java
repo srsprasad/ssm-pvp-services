@@ -40,4 +40,16 @@ public class VerifiedAlumniData extends StudentData {
 	public void setEmailId(String emailId) {
 		this.emailId = emailId;
 	}
+	@Override
+	public String toString() {
+		return super.toString();
+	}
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+	@Override
+	public boolean equals(Object other) {
+		return super.equals(other);
+	}
 }

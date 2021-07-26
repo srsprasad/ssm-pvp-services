@@ -55,6 +55,10 @@ public class StudentDataServiceImpl implements StudentDataService {
 
 		studentServiceResponse.setLastUpdateOn(updatedOn);
 		
+		studentServiceResponse.getUploadedData().stream()
+				.filter(data -> studentServiceResponse.getSubmittedData().contains(data)).toList()
+				.forEach(e -> System.out.println(e));
+		
 	}
 	
 	@Override
