@@ -6,13 +6,15 @@ public class StudentServiceResponse {
 	
 	private String lastUpdateOn = "";
 	
-	private List<SubmittedAlumniData> submittedData;
+	private List<StudentData> submittedData;
 	
-	private List<VerifiedAlumniData> uploadedData;
+	private List<StudentData> uploadedData;
 	
-	private List<VerifiedAlumniData> verifiedData;
+	private List<StudentData> verifiedData;
 	
-	private List<VerifiedAlumniData> uploadedSingleData;
+	private List<StudentData> uploadedSingleData;
+	
+	private List<StudentData> googleFormData;
 
 	public String getLastUpdateOn() {
 		return lastUpdateOn;
@@ -22,36 +24,44 @@ public class StudentServiceResponse {
 		this.lastUpdateOn = lastUpdateOn;
 	}
 
-	public List<SubmittedAlumniData> getSubmittedData() {
+	public List<StudentData> getSubmittedData() {
 		return submittedData;
 	}
-	
-	public void setSubmittedData(List<SubmittedAlumniData> submittedData) {
+
+	public void setSubmittedData(List<StudentData> submittedData) {
 		this.submittedData = submittedData;
 	}
 
-	public List<VerifiedAlumniData> getUploadedData() {
+	public List<StudentData> getUploadedData() {
 		return uploadedData;
 	}
 
-	public void setUploadedData(List<VerifiedAlumniData> uploadedData) {
+	public void setUploadedData(List<StudentData> uploadedData) {
 		this.uploadedData = uploadedData;
 	}
 
-	public List<VerifiedAlumniData> getVerifiedData() {
+	public List<StudentData> getVerifiedData() {
 		return verifiedData;
 	}
 
-	public void setVerifiedData(List<VerifiedAlumniData> verifiedData) {
+	public void setVerifiedData(List<StudentData> verifiedData) {
 		this.verifiedData = verifiedData;
 	}
 
-	public List<VerifiedAlumniData> getUploadedSingleData() {
+	public List<StudentData> getUploadedSingleData() {
 		return uploadedSingleData;
 	}
 
-	public void setUploadedSingleData(List<VerifiedAlumniData> uploadedSingleData) {
+	public void setUploadedSingleData(List<StudentData> uploadedSingleData) {
 		this.uploadedSingleData = uploadedSingleData;
+	}
+	
+	public List<StudentData> getGoogleFormData() {
+		return googleFormData;
+	}
+	
+	public void setGoogleFormData(List<StudentData> googleFormData) {
+		this.googleFormData = googleFormData;
 	}
 	
 }

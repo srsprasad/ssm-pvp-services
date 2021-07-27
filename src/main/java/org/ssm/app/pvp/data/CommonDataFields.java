@@ -27,4 +27,8 @@ public abstract class CommonDataFields {
 	public String getSubmittedOn() {
 		return submittedOn;
 	}
+	
+	public void setStatus(String status) {
+		this.status = status;
+	}
 }
