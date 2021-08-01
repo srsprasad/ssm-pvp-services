@@ -1,9 +1,15 @@
 package org.ssm.app.pvp.data;
 
+import java.time.LocalDateTime;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.ssm.app.pvp.utils.SubmittedDateTimeDeformatter;
+import org.ssm.app.pvp.utils.SubmittedDateTimeFormatter;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 public class VerifiedAlumniData extends StudentData {
 	
@@ -46,8 +52,10 @@ public class VerifiedAlumniData extends StudentData {
 		this.emailId = emailId;
 	}
 	@JsonProperty("SUBMITTED_ON")
-	public void setSubmittedOn(String submittedOn) {
-		this.submittedOn = submittedOn;
+	@JsonSerialize(using = SubmittedDateTimeFormatter.class)
+	@JsonDeserialize(using = SubmittedDateTimeDeformatter.class)
+	public void setSubmittedOnDateTime(LocalDateTime localDateTime) {
+		this.submittedOnDateTime = localDateTime;
 	}
 	
 	@Override

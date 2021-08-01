@@ -1,9 +1,16 @@
 package org.ssm.app.pvp.data;
 
+import java.time.LocalDateTime;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.ssm.app.pvp.utils.SubmittedDateTimeDeformatter;
+import org.ssm.app.pvp.utils.SubmittedDateTimeFormatter;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 public class SubmittedAlumniData extends StudentData {
 
@@ -13,6 +20,7 @@ public class SubmittedAlumniData extends StudentData {
 	}
 	
 	@JsonProperty("ALUMNI_NAME")
+	@JsonAlias("STUDENT_NAME")
 	public void setStudentName(String studentName) {
 		this.studentName = studentName;
 	}
@@ -42,9 +50,16 @@ public class SubmittedAlumniData extends StudentData {
 		this.emailId = emailId;
 	}
 	@JsonProperty("TIMESTAMP")
-	public void setSubmittedOn(String submittedOn) {
-		this.submittedOn = submittedOn;
+	@JsonAlias("Timestamp")
+	@JsonSerialize(using = SubmittedDateTimeFormatter.class)
+	@JsonDeserialize(using = SubmittedDateTimeDeformatter.class)
+	public void setSubmittedOnDateTime(LocalDateTime localDateTime) {
+		this.submittedOnDateTime = localDateTime;
 	}
+	/*
+	 * public void setSubmittedOn(String submittedOn) { this.submittedOn =
+	 * submittedOn; }
+	 */
 	
 	@Override
 	public int hashCode() {

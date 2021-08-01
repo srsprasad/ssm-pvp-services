@@ -17,6 +17,7 @@ import org.ssm.app.pvp.data.SubmittedAlumniData;
 import org.ssm.app.pvp.data.VerifiedAlumniData;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 @Service
 public class StudentDataServiceImpl implements StudentDataService {
@@ -35,6 +36,7 @@ public class StudentDataServiceImpl implements StudentDataService {
 	public void loadStudentData() throws Exception {
 		
 		ObjectMapper mapper = new ObjectMapper();
+		mapper.registerModule(new JavaTimeModule());
 		ClassPathResource resourceData;
 		SubmittedAlumniData[] sumbmittedData;
 		VerifiedAlumniData[] portalData;

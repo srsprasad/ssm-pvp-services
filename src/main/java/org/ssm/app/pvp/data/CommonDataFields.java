@@ -1,5 +1,7 @@
 package org.ssm.app.pvp.data;
 
+import java.time.LocalDateTime;
+
 public abstract class CommonDataFields {
 	
 	protected String status;
@@ -8,6 +10,7 @@ public abstract class CommonDataFields {
 	protected String contactNumber;
 	protected String emailId;
 	protected String submittedOn;
+	protected LocalDateTime submittedOnDateTime;
 	
 	public String getStatus() {
 		return status;
@@ -26,6 +29,9 @@ public abstract class CommonDataFields {
 	}
 	public String getSubmittedOn() {
 		return submittedOn;
+	}
+	public LocalDateTime getSubmittedOnDateTime() {
+		return submittedOnDateTime;
 	}
 	
 	public void setStatus(String status) {
